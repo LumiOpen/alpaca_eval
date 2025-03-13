@@ -15,7 +15,11 @@ pip install -e git+https://github.com/LumiOpen/alpaca_eval
 - Set the chat template in `prompt.txt`
 
 ### Generating outputs and judgments for a model
-This generates responses for a model and then uses GPT-4 as judge to obtain pairwise preferences between the model responses and a reference responses. It is important to specify the reference model because by default AlpacaEval 2.0 uses `gpt4_1106_preview` as the reference even if their docs say that they use GPT-4 Turbo. **Don't trust AlpacaEval docs because they are not always updated. Verify with the code.**
+This generates responses for a model and then uses GPT-4 as judge to obtain pairwise preferences between the model responses and a reference responses. 
+
+It is important to specify the reference model because by default AlpacaEval 2.0 uses `gpt4_1106_preview` as the reference even if their docs say that they use GPT-4 Turbo. 
+
+**Don't trust AlpacaEval docs because they are not always updated. Verify with the code.**
 
 ```bash
 alpaca_eval evaluate_from_model \
