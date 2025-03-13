@@ -15,23 +15,34 @@ pip install -e git+https://github.com/LumiOpen/alpaca_eval
 - Set the chat template in `prompt.txt`
 
 ### Generating outputs and judgments for a model
-This command generates responses for the model `tulu-3` and then uses GPT-4 evaluator to get pairwise preferences between the model and reference. In this case we use `gpt-4-turbo-2024-04-09` as the reference model.
-
-**Note:** It is important to specify the reference output because by default AlpacaEval 2.0 uses gpt4_1106_preview as the reference even if their docs specify that they use GPT-4 turbo.
+This generates responses for a model and then uses GPT-4 as judge to obtain pairwise preferences between the model's and a reference response from a strong model such as GPT-4 Turbo. It is important to specify the reference output because by default AlpacaEval 2.0 uses gpt4_1106_preview as the reference even if their docs say that they use GPT-4 Turbo.
 ```bash
 alpaca_eval evaluate_from_model \
-  --model_configs 'tulu-3-sft' \
+  --model_configs <MODEL_CONFIG> \
+  --reference_model_configs <REFERENCE CONFIG>
+```
+
+**Example usage**
+This example generates outputs from `tulu-3` and then compares the models responses to reference answers from `gpt-4-turbo-2024-04-09`.
+```bash
+alpaca_eval evaluate_from_model \
+  --model_configs 'tulu-3' \
   --reference_outputs 'results/gpt-4-turbo-2024-04-09/model_outputs.json'
 ```
 
-The model outputs will be saved in ``.
+The model outputs will be saved in `results/tulu-3`.
 
 
 ### Generating judgments for a model
 
-If you already have outputs from the model and you just want to generate the pairwise preferences.
 ```bash
-alpaca_eval evaluate --model_outputs 'example/outputs.json' \
+alpaca_eval evaluate --model_outputs <PATH_TO_MODEL_OUTPUTS_JSON> \
+                    --reference_outputs <PATH_TO_REFERENCE_OUTPUTS_JSON>
+```
+**Example usage**
+This example asks GPT-4 to compare responses in `results/tulu-3/model_outputs.json` to the reference responses `results/gpt-4-turbo-2024-04-09/model_outputs.json`: 
+```bash
+alpaca_eval evaluate --model_outputs 'results/tulu-3/model_outputs.json' \
                      --reference_outputs 'results/gpt-4-turbo-2024-04-09/model_outputs.json'
 ```
 
