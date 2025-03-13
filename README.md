@@ -2,8 +2,39 @@
 
 Install this fork
 ```bash
-python -m pip install git+https://github.com/LumiOpen/alpaca_eval
+pip install -e git+https://github.com/LumiOpen/alpaca_eval
 ```
+## Quick start
+
+### Configuring OpenAI client
+- Add your OpenAI API key and organisation id in `client_configs/openai_configs.yaml`
+
+### Supporting a new model to evaluate
+- Add a directory for the model in  `src/alpaca_eval/models_configs`.
+- If you are evaluating a model from HuggingFace or a local model use `tulu-3` or `tulu-3-local` as an example.
+- Set the chat template in `prompt.txt`
+
+### Generating outputs and judgments for a model
+This command generates responses for the model `tulu-3` and then uses GPT-4 evaluator to get pairwise preferences between the model and reference. In this case we use `gpt-4-turbo-2024-04-09` as the reference model.
+
+**Note:** It is important to specify the reference output because by default AlpacaEval 2.0 uses gpt4_1106_preview as the reference even if their docs specify that they use GPT-4 turbo.
+```bash
+alpaca_eval evaluate_from_model \
+  --model_configs 'tulu-3-sft' \
+  --reference_outputs 'results/gpt-4-turbo-2024-04-09/model_outputs.json'
+```
+
+The model outputs will be saved in ``.
+
+
+### Generating judgments for a model
+
+If you already have outputs from the model and you just want to generate the pairwise preferences.
+```bash
+alpaca_eval evaluate --model_outputs 'example/outputs.json' \
+                     --reference_outputs 'results/gpt-4-turbo-2024-04-09/model_outputs.json'
+```
+
 
 # <a href="https://tatsu-lab.github.io/alpaca_eval/" target="_blank"><img src="https://raw.githubusercontent.com/tatsu-lab/alpaca_eval/main/docs/AlpacaFarm_small.png" width="35"></a> [AlpacaEval](https://tatsu-lab.github.io/alpaca_eval/) : An Automatic Evaluator for Instruction-following Language Models
 
