@@ -53,7 +53,7 @@ This example asks GPT-4 to compare responses in `results/tulu-3/model_outputs.js
 alpaca_eval evaluate --model_outputs 'results/tulu-3/model_outputs.json' \
                      --reference_outputs 'results/gpt-4-turbo-2024-04-09/model_outputs.json'
 ```
-The results will be saved to `results/tulu-3-sft/weighted_alpaca_eval_gpt4_turbo`.
+The results will be saved to `results/tulu-3/weighted_alpaca_eval_gpt4_turbo`.
 
 # <a href="https://tatsu-lab.github.io/alpaca_eval/" target="_blank"><img src="https://raw.githubusercontent.com/tatsu-lab/alpaca_eval/main/docs/AlpacaFarm_small.png" width="35"></a> [AlpacaEval](https://tatsu-lab.github.io/alpaca_eval/) : An Automatic Evaluator for Instruction-following Language Models
 
