@@ -2,7 +2,7 @@
 
 Install this fork
 ```bash
-pip -e install git+https://github.com/LumiOpen/alpaca_eval
+python -m pip install git+https://github.com/LumiOpen/alpaca_eval
 ```
 
 # <a href="https://tatsu-lab.github.io/alpaca_eval/" target="_blank"><img src="https://raw.githubusercontent.com/tatsu-lab/alpaca_eval/main/docs/AlpacaFarm_small.png" width="35"></a> [AlpacaEval](https://tatsu-lab.github.io/alpaca_eval/) : An Automatic Evaluator for Instruction-following Language Models
