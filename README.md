@@ -15,7 +15,8 @@ pip install -e git+https://github.com/LumiOpen/alpaca_eval
 - Set the chat template in `prompt.txt`
 
 ### Generating outputs and judgments for a model
-This generates responses for a model and then uses GPT-4 as judge to obtain pairwise preferences between the model's and a reference response from a strong model such as GPT-4 Turbo. It is important to specify the reference output because by default AlpacaEval 2.0 uses gpt4_1106_preview as the reference even if their docs say that they use GPT-4 Turbo.
+This generates responses for a model and then uses GPT-4 as judge to obtain pairwise preferences between the model responses and a reference responses. It is important to specify the reference model because by default AlpacaEval 2.0 uses `gpt4_1106_preview` as the reference even if their docs say that they use GPT-4 Turbo. **Don't trust AlpacaEval docs because they are not always updated. Verify with the code.**
+
 ```bash
 alpaca_eval evaluate_from_model \
   --model_configs <MODEL_CONFIG> \
@@ -23,29 +24,32 @@ alpaca_eval evaluate_from_model \
 ```
 
 **Example usage**
-This example generates outputs from `tulu-3` and then compares the models responses to reference answers from `gpt-4-turbo-2024-04-09`.
+
+This example generates outputs from `tulu-3` and then compares the model's responses to reference answers from `gpt-4-turbo-2024-04-09`.
 ```bash
 alpaca_eval evaluate_from_model \
   --model_configs 'tulu-3' \
   --reference_outputs 'results/gpt-4-turbo-2024-04-09/model_outputs.json'
 ```
 
-The model outputs will be saved in `results/tulu-3`.
+The model outputs will be saved to `results/tulu-3`.
 
 
 ### Generating judgments for a model
 
+This is when you already have the model's responses to the AlpacaEval questions and you just want to get win rates for the model against a reference model.
 ```bash
 alpaca_eval evaluate --model_outputs <PATH_TO_MODEL_OUTPUTS_JSON> \
                     --reference_outputs <PATH_TO_REFERENCE_OUTPUTS_JSON>
 ```
 **Example usage**
+
 This example asks GPT-4 to compare responses in `results/tulu-3/model_outputs.json` to the reference responses `results/gpt-4-turbo-2024-04-09/model_outputs.json`: 
 ```bash
 alpaca_eval evaluate --model_outputs 'results/tulu-3/model_outputs.json' \
                      --reference_outputs 'results/gpt-4-turbo-2024-04-09/model_outputs.json'
 ```
-
+The results will be saved to `results/tulu-3-sft/weighted_alpaca_eval_gpt4_turbo`.
 
 # <a href="https://tatsu-lab.github.io/alpaca_eval/" target="_blank"><img src="https://raw.githubusercontent.com/tatsu-lab/alpaca_eval/main/docs/AlpacaFarm_small.png" width="35"></a> [AlpacaEval](https://tatsu-lab.github.io/alpaca_eval/) : An Automatic Evaluator for Instruction-following Language Models
 
