@@ -19,7 +19,7 @@ This generates responses for a model and then uses GPT-4 as judge to obtain pair
 
 It is important to specify the reference model because by default AlpacaEval 2.0 uses `gpt4_1106_preview` as the reference even if their docs say that they use GPT-4 Turbo. 
 
-**Don't trust AlpacaEval docs because they are not always updated. Verify with the code.**
+(**Note:** Don't trust AlpacaEval docs because they are not always updated. Verify with the code.)
 
 ```bash
 alpaca_eval evaluate_from_model \
