@@ -43,15 +43,17 @@ The model outputs will be saved to `results/tulu-3`.
 
 This is when you already have the model's responses to the AlpacaEval questions and you just want to get win rates for the model against a reference model.
 ```bash
-alpaca_eval evaluate --model_outputs <PATH_TO_MODEL_OUTPUTS_JSON> \
-                    --reference_outputs <PATH_TO_REFERENCE_OUTPUTS_JSON>
+alpaca_eval evaluate \
+  --model_outputs <PATH_TO_MODEL_OUTPUTS_JSON> \
+  --reference_outputs <PATH_TO_REFERENCE_OUTPUTS_JSON>
 ```
 **Example usage**
 
 This example asks GPT-4 to compare responses in `results/tulu-3/model_outputs.json` to the reference responses `results/gpt-4-turbo-2024-04-09/model_outputs.json`: 
 ```bash
-alpaca_eval evaluate --model_outputs 'results/tulu-3/model_outputs.json' \
-                     --reference_outputs 'results/gpt-4-turbo-2024-04-09/model_outputs.json'
+alpaca_eval evaluate \
+  --model_outputs 'results/tulu-3/model_outputs.json' \
+  --reference_outputs 'results/gpt-4-turbo-2024-04-09/model_outputs.json'
 ```
 The results will be saved to `results/tulu-3/weighted_alpaca_eval_gpt4_turbo`.
 
