@@ -2,8 +2,60 @@
 
 Install this fork
 ```bash
-python -m pip install git+https://github.com/LumiOpen/alpaca_eval
+pip install -e git+https://github.com/LumiOpen/alpaca_eval
 ```
+## Quick start
+
+### Configuring the OpenAI client
+- Add your OpenAI API key and organisation id to `client_configs/openai_configs.yaml`
+
+### Supporting a new model to evaluate
+- Add a directory for the model under  `src/alpaca_eval/models_configs`.
+- If you are evaluating a model from HuggingFace or a local model use `tulu-3` or `tulu-3-local` as an example.
+- Set the chat template in `prompt.txt`
+
+### Generating outputs and judgments for a model
+This generates responses for a model and then uses GPT-4 as judge to obtain pairwise preferences between the model responses and reference responses. 
+
+It is important to specify the reference model because by default AlpacaEval 2.0 uses `gpt4_1106_preview` as the reference even if their docs say that they use GPT-4 Turbo. 
+
+(**Note:** Don't trust AlpacaEval docs because they are not always updated. Always verify with the code.)
+
+```bash
+alpaca_eval evaluate_from_model \
+  --model_configs <MODEL_CONFIG> \
+  --reference_model_configs <REFERENCE CONFIG>
+```
+
+**Example usage**
+
+This example generates outputs from `tulu-3` and then compares the model's responses to reference answers from `gpt-4-turbo-2024-04-09`.
+```bash
+alpaca_eval evaluate_from_model \
+  --model_configs 'tulu-3' \
+  --reference_model_configs 'gpt-4-turbo-2024-04-09'
+```
+
+The model outputs will be saved to `results/tulu-3`.
+
+
+### Generating judgments for a model
+
+This is when you already have the model's responses to the AlpacaEval questions and you just want to get win rates for the model against a reference model.
+```bash
+alpaca_eval evaluate \
+  --model_outputs <PATH_TO_MODEL_OUTPUTS_JSON> \
+  --reference_outputs <PATH_TO_REFERENCE_OUTPUTS_JSON>
+```
+**Example usage**
+
+This example asks GPT-4 to compare responses in `results/tulu-3/model_outputs.json` to the reference responses `results/gpt-4-turbo-2024-04-09/model_outputs.json`: 
+```bash
+alpaca_eval evaluate \
+  --model_outputs 'results/tulu-3/model_outputs.json' \
+  --reference_outputs 'results/gpt-4-turbo-2024-04-09/model_outputs.json'
+```
+The results will be saved to `results/tulu-3/weighted_alpaca_eval_gpt4_turbo`.
 
 # <a href="https://tatsu-lab.github.io/alpaca_eval/" target="_blank"><img src="https://raw.githubusercontent.com/tatsu-lab/alpaca_eval/main/docs/AlpacaFarm_small.png" width="35"></a> [AlpacaEval](https://tatsu-lab.github.io/alpaca_eval/) : An Automatic Evaluator for Instruction-following Language Models
 
