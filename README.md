@@ -33,7 +33,7 @@ This example generates outputs from `tulu-3` and then compares the model's respo
 ```bash
 alpaca_eval evaluate_from_model \
   --model_configs 'tulu-3' \
-  --reference_outputs 'results/gpt-4-turbo-2024-04-09/model_outputs.json'
+  --reference_model_configs 'gpt-4-turbo-2024-04-09'
 ```
 
 The model outputs will be saved to `results/tulu-3`.
