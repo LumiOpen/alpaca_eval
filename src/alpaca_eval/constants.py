@@ -35,7 +35,7 @@ DATASETS_TOKEN = os.environ.get("DATASETS_TOKEN", None)
 HUGGINGFACEHUB_API_TOKEN = os.environ.get("HUGGINGFACEHUB_API_TOKEN", None)
 DATASETS_FORCE_DOWNLOAD = os.environ.get("DATASETS_FORCE_DOWNLOAD", False)
 ########################
-
+LANGUAGE=os.environ.get("LANGUAGE")
 IS_ALPACA_EVAL_2 = ast.literal_eval(os.environ.get("IS_ALPACA_EVAL_2", "True"))
 ANNOTATOR_CONFIG_AE1 = "alpaca_eval_gpt4"
 ANNOTATOR_CONFIG_AE2 = "weighted_alpaca_eval_gpt4_turbo"
@@ -77,19 +77,29 @@ VERIFIED_EVALUATORS = tuple(
 ORDERED_LEADERBOARD_MODES = ["minimal", "verified", "community", "dev"]
 
 
-def get_alpaca_eval_data(dataset="alpaca_eval_gpt4_baseline"):
-    dataset = datasets.load_dataset(
-        "tatsu-lab/alpaca_eval",
-        dataset,
-        cache_dir=DEFAULT_CACHE_DIR,
-        token=DATASETS_TOKEN,
-        download_mode="force_redownload" if DATASETS_FORCE_DOWNLOAD else None,
-        trust_remote_code=True,
-    )["eval"]
+def get_alpaca_eval_data(dataset="alpaca_eval_gpt4_baseline", lang=None):
+    if lang is None or lang == "en":
+        dataset = datasets.load_dataset(
+            "tatsu-lab/alpaca_eval",
+            dataset,
+            cache_dir=DEFAULT_CACHE_DIR,
+            token=DATASETS_TOKEN,
+            download_mode="force_redownload" if DATASETS_FORCE_DOWNLOAD else None,
+            trust_remote_code=True,
+        )["eval"]
+    else:
+        dataset = datasets.load_dataset(
+            "LumiOpen/alpaca_eval_multi",
+            # lang,
+            cache_dir=DEFAULT_CACHE_DIR,
+            token=DATASETS_TOKEN,
+            download_mode="force_redownload" if DATASETS_FORCE_DOWNLOAD else None,
+            trust_remote_code=True,
+        )["train"]
     return dataset
 
 
-ALPACAEVAL_REFERENCE_OUTPUTS_2 = get_alpaca_eval_data
+ALPACAEVAL_REFERENCE_OUTPUTS_2 = get_alpaca_eval_data(lang=LANGUAGE)
 ALPACAEVAL_REFERENCE_OUTPUTS_1 = partial(get_alpaca_eval_data, dataset="alpaca_eval")
 
 ALPACAEVAL_REFERENCE_OUTPUTS = ALPACAEVAL_REFERENCE_OUTPUTS_2 if IS_ALPACA_EVAL_2 else ALPACAEVAL_REFERENCE_OUTPUTS_1
