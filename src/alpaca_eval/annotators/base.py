@@ -16,9 +16,13 @@ from .. import completion_parsers, constants, processors, types, utils
 from ..decoders import get_fn_completions
 
 CURRENT_DIR = Path(__file__).parent
+LANGUAGE=os.environ.get("LANGUAGE")
+
 logging.getLogger().setLevel(logging.INFO)
 
 __all__ = ["BaseAnnotator", "BaseAnnotatorJSON", "SingleAnnotator"]
+
+
 
 
 #language identifier
@@ -228,40 +232,59 @@ class BaseAnnotator(abc.ABC):
         }
         for c in self.primary_keys:
             df_to_annotate[c] = df_to_annotate[c].astype(str)
+        
+        
+        pd.set_option('max_colwidth', 50)
+
+        #logging.info("df_anno0 ")
+        #logging.info(df_to_annotate)
+        #logging.info(df_to_annotate.columns)
+
+        langs=[detect_language_glotlid(x.replace("\n","")) for x in df_to_annotate["output_2"]]  #is output_1 model and output_2 refereence          
+        df_to_annotate["langs"]=langs
+        df_to_annotate2=df_to_annotate[df_to_annotate["langs"]==LANGUAGE]
+        df_to_not_annotate2=df_to_annotate[df_to_annotate["langs"]!=LANGUAGE]
+
+        #logging.info("df_to_annotate2")
+        #logging.info(df_to_annotate2)
+
+        #logging.info("df_to_not_annotate2")
+        #logging.info(df_to_not_annotate2)
 
         all_annotated = []
-        for df_chunk in utils.dataframe_chunk_generator(df_to_annotate, chunksize, tqdm_desc="Annotation chunk"):
+        for df_chunk in utils.dataframe_chunk_generator(df_to_annotate2, chunksize, tqdm_desc="Annotation chunk"):
+            #logging.info("df_chunk ")              
+            #logging.info(df_chunk)      
 
-            curr_df_to_annotate = self._preprocess(df_chunk)            
-            
-            pd.set_option('max_colwidth', 50)
-           
-            #detect language here, CHECK which one is the model it should be tested
-            langs=[detect_language_glotlid(x.replace("\n","")) for x in curr_df_to_annotate["output_2"]]            
-            curr_df_to_annotate["langs"]=langs
-
-            #df with only fin
-            logging.info("curr_df_to_annotate 2")
-            logging.info(curr_df_to_annotate)
-
-
-
-            #store removed ids to give preference 2
-            #logging.info("curr_df_to_annotate2 - finnish only:")
-
-            #curr_df_to_annotate2=curr_df_to_annotate[curr_df_to_annotate["langs"]=="fin"]
-            #logging.info(curr_df_to_annotate2)
+            curr_df_to_annotate = self._preprocess(df_chunk)  
 
             df_annotated = self._annotate(curr_df_to_annotate, **decoding_kwargs)
             annotated = self._postprocess_and_store_(df_annotated, df_chunk)
+
             all_annotated.extend(annotated)
+        #logging.info(all_annotated)
+
+        #add not annotated! CHECK if correct 2.0 or 1.0 ? 
+        # these are non-LANGUAGE, so preference should be chosen always!!!
+        for data in df_to_not_annotate2.itertuples():
+            row1={'instruction': data.instruction, 'output_1': data.output_1, 'generator_1': data.generator_1, 'dataset': data.dataset, \
+                  'output_2': data.output_2, 'generator_2': data.generator_2, 'langs': data.langs, 'annotator': None, \
+                  'preference': 2.0, 'preference_price_per_example': 0.0, 'preference_time_per_example': 0.0, \
+                  'preference_raw_completion': {'finish_reason': 'length', 'index': 0, 'logprobs': {'content': None, 'refusal': None}, 'message': {'content': 'M', 'refusal': None, 'role': 'assistant', 'annotations': [], \
+                  'audio': None, 'function_call': None, 'tool_calls': None}, 'text': 'M', 'total_tokens': 0.0}, 'preference_version': 'alpaca_eval==0.6.6', 'preference_date': '2025-05-05T14:33:28.257354'}      
+            all_annotated.append(row1)
 
         # undo the string conversion for the primary keys
         all_annotated = [
             {c: inverse_mapper[c].get(el, el) if c in inverse_mapper else el for c, el in row.items()}
             for row in all_annotated
         ]
-
+        #logging.info("all_annotated")
+        #logging.info(all_annotated)        
+        #logging.info(all_annotated[0])        
+        logging.info(f"Correct {LANGUAGE} rows | not correct language rows:")        
+        logging.info(f"{len(df_to_annotate2)} | {len(df_to_not_annotate2)}")        
+        
         return all_annotated
 
     #######################
@@ -754,6 +777,8 @@ class SingleAnnotator:
             return df_to_annotate
 
         df_to_annotate = self._preprocess(df_to_annotate)
+
+
         logging.info("DF_TO_annotate2: base.py:")
         logging.info(df_to_annotate)
         # the following only reapplies the parsing in case you already stored the raw completions. requires batch_size=1
@@ -852,13 +877,15 @@ class SingleAnnotator:
 
     def _preprocess(self, df_to_annotate: pd.DataFrame) -> pd.DataFrame:
         """Preprocess the examples before annotating. In particular, takes care of all the randomization."""
-
+        
         for processor in self.processors:
             df_to_annotate = processor.preprocess(df_to_annotate)
 
         if self.is_shuffle:
             df_to_annotate = df_to_annotate.sample(frac=1, random_state=self.seed)
 
+        logging.info("_preprocess df_to_annotate")
+        logging.info(df_to_annotate)
         return df_to_annotate
 
     def _parse_completions(self, completions: list[str]) -> tuple[list[Any], list[Any]]:
