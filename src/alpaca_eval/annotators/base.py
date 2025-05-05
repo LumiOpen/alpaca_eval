@@ -21,6 +21,23 @@ logging.getLogger().setLevel(logging.INFO)
 __all__ = ["BaseAnnotator", "BaseAnnotatorJSON", "SingleAnnotator"]
 
 
+#language identifier
+from huggingface_hub import hf_hub_download
+import fasttext
+
+model_path = hf_hub_download(repo_id="cis-lmu/glotlid", filename="model.bin")   
+model_cis_lmu = fasttext.load_model(model_path)
+
+def detect_language_glotlid(text,model=model_cis_lmu):
+    """Given a text, it returns the Glotlid prediction as NLLB language code, e.g., Latn-eng
+    """
+    lab, score = model.predict(text)
+    first = lab[0].replace("__label__","").replace("_Latn","")
+    return first
+
+
+
+
 class BaseAnnotator(abc.ABC):
     """Base class for a pool of annotators.
 
@@ -214,7 +231,27 @@ class BaseAnnotator(abc.ABC):
 
         all_annotated = []
         for df_chunk in utils.dataframe_chunk_generator(df_to_annotate, chunksize, tqdm_desc="Annotation chunk"):
-            curr_df_to_annotate = self._preprocess(df_chunk)
+
+            curr_df_to_annotate = self._preprocess(df_chunk)            
+            
+            pd.set_option('max_colwidth', 50)
+           
+            #detect language here, CHECK which one is the model it should be tested
+            langs=[detect_language_glotlid(x.replace("\n","")) for x in curr_df_to_annotate["output_2"]]            
+            curr_df_to_annotate["langs"]=langs
+
+            #df with only fin
+            logging.info("curr_df_to_annotate 2")
+            logging.info(curr_df_to_annotate)
+
+
+
+            #store removed ids to give preference 2
+            #logging.info("curr_df_to_annotate2 - finnish only:")
+
+            #curr_df_to_annotate2=curr_df_to_annotate[curr_df_to_annotate["langs"]=="fin"]
+            #logging.info(curr_df_to_annotate2)
+
             df_annotated = self._annotate(curr_df_to_annotate, **decoding_kwargs)
             annotated = self._postprocess_and_store_(df_annotated, df_chunk)
             all_annotated.extend(annotated)
@@ -276,6 +313,7 @@ class BaseAnnotator(abc.ABC):
         """Preprocess the examples to annotate. In particular takes care of filtering unnecessary examples."""
 
         df_to_annotate = utils.convert_to_dataframe(to_annotate)
+
         self._add_missing_primary_keys_(df_to_annotate)
 
         # don't remove output keys to keep
@@ -285,8 +323,14 @@ class BaseAnnotator(abc.ABC):
                 df_to_annotate[c] = None
 
         # remove duplicates because you only need to annotate one of them
-        df_to_annotate = df_to_annotate.drop_duplicates(subset=self.primary_keys)
 
+        df_to_annotate = df_to_annotate.drop_duplicates(subset=self.primary_keys)
+        
+        #pd.set_option('max_colwidth', 200)
+        #logging.info("DF_TO_annotate: base.py:")
+        #logging.info(df_to_annotate)
+        #logging.info(df_to_annotate["output"])
+        
         # set the annotater for each example
         df_to_annotate[self.annotator_column] = df_to_annotate.apply(
             lambda x: utils.random_seeded_choice(
@@ -296,6 +340,12 @@ class BaseAnnotator(abc.ABC):
             ),
             axis=1,
         )
+        #logging.info("DF_TO_annotate2: base.py:")
+        #logging.info(df_to_annotate)
+
+        #logging.info(df_to_annotate["generator_"])
+
+
 
         if self.is_avoid_reannotations:
             df_to_annotate = self._apply_cached_annotations(df_to_annotate)
@@ -704,7 +754,8 @@ class SingleAnnotator:
             return df_to_annotate
 
         df_to_annotate = self._preprocess(df_to_annotate)
-
+        logging.info("DF_TO_annotate2: base.py:")
+        logging.info(df_to_annotate)
         # the following only reapplies the parsing in case you already stored the raw completions. requires batch_size=1
         if self.completion_column in df_to_annotate.columns and self.batch_size == 1:
             # keep only the rows that have not been annotated yet
