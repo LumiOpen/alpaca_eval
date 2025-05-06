@@ -78,7 +78,7 @@ ORDERED_LEADERBOARD_MODES = ["minimal", "verified", "community", "dev"]
 
 
 def get_alpaca_eval_data(dataset="alpaca_eval_gpt4_baseline", lang=None):
-    if lang is None or lang == "en":
+    if lang is None or lang == "en" or lang == "eng":
         dataset = datasets.load_dataset(
             "tatsu-lab/alpaca_eval",
             dataset,
@@ -95,7 +95,7 @@ def get_alpaca_eval_data(dataset="alpaca_eval_gpt4_baseline", lang=None):
             token=DATASETS_TOKEN,
             download_mode="force_redownload" if DATASETS_FORCE_DOWNLOAD else None,
             trust_remote_code=True,
-        )["train"]
+        )["test"]
     return dataset
 
 

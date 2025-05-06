@@ -278,6 +278,7 @@ def evaluate_from_model(
         Other kwargs to `evaluate`
     """
     df_dataset = utils.load_or_convert_to_dataframe(evaluation_dataset)
+    print("df_dataset:", df_dataset)
 
     if chunksize is not None and not is_load_outputs:
         logging.info("`is_load_outputs` has to be true to use chunksize. Setting it to True.")
@@ -347,9 +348,11 @@ def evaluate_from_model(
             model_outputs = get_completions(model_configs, df=df_chunk)
 
         if reference_model_configs is None:
+            print("No reference config")
             if "output" not in df_chunk.columns:
                 raise ValueError("evaluation_dataset should have a column 'output' containing references outputs")
             reference_outputs = df_dataset.copy()
+            print("reference_outputs from HF:", reference_outputs)
         else:
             reference_outputs = get_completions(
                 reference_model_configs,
