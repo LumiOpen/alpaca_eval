@@ -193,7 +193,7 @@ def evaluate(
         df_leaderboard.to_csv(output_path / "leaderboard.csv")
         if annotations is not None:
             utils.convert_to_dataframe(annotations).to_json(
-                output_path / "annotations.json", orient="records", indent=2
+                output_path / "annotations.json", orient="records", indent=2, force_ascii=False
             )
 
     if is_cache_leaderboard is None:
@@ -361,8 +361,8 @@ def evaluate_from_model(
             )
 
         if output_path is not None:
-            model_outputs.to_json(output_path / "model_outputs.json", orient="records", indent=2)
-            reference_outputs.to_json(output_path / "reference_outputs.json", orient="records", indent=2)
+            model_outputs.to_json(output_path / "model_outputs.json", orient="records", indent=2, force_ascii=False)
+            reference_outputs.to_json(output_path / "reference_outputs.json", orient="records", indent=2, force_ascii=False)
 
     if reference_model_configs is None:
         # using a default reference outputs => uses the right leaderboard
@@ -585,7 +585,7 @@ def analyze_evaluators(
         df_leaderboard.to_csv(output_path / f"leaderboard.csv")
         for annotator_name, df_crossannotations in all_crossannotations.items():
             annotations_name = f"annotation.json"
-            df_crossannotations.to_json(output_path / annotations_name, orient="records", indent=2)
+            df_crossannotations.to_json(output_path / annotations_name, orient="records", indent=2, force_ascii=False)
 
     if is_return_instead_of_print:
         return df_leaderboard, all_crossannotations
