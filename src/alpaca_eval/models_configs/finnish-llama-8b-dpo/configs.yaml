@@ -4,11 +4,11 @@ finnish-llama-8b-dpo:
   completions_kwargs:
     model_name: "/scratch/project_462000353/zosaelai2/models/finnish-llama-3-8b-rated-dpo-helpsteer2-eng-fin-epochs-5-batch-64"
     model_kwargs:
-      dtype: 'bfloat16'
+      max_model_len: 4096
+      tensor_parallel_size: 1
     max_new_tokens: 2048
     temperature: 0.6
     top_p: 0.9
-    use_beam_search: False
-    batch_size: 16
+    batch_size: 64
   pretty_name: "Finnish Llama 8B DPO"
   link: ""
