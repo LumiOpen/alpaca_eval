@@ -19,22 +19,27 @@ This generates responses for a model and then uses GPT-4 as judge to obtain pair
 
 If you don't supply a reference model config, the reference responses will be taken from the alpaca_eval dataset. For Finnish, this is https://huggingface.co/datasets/LumiOpen/alpaca_eval_multi
 
-(**Note:** Don't trust AlpacaEval docs because they are not always updated. Always verify with the code.)
+We specify the language using the LANGUAGE env variable. If no value is provided, we default to English ('regular' AlpacaEval). 
 
 ```bash
+export LANGUAGE="fin"
+
 alpaca_eval evaluate_from_model \
   --model_configs <MODEL_CONFIG> \
 ```
 
 **Example usage**
 
-This example generates outputs from `tulu-3` and then compares the model's responses to reference answers from `gpt-4-turbo-2024-04-09`.
+This example generates outputs from `finnish-llama-8b-dpo` and then compares the model's responses to reference answers from `gpt-4-turbo-2024-04-09`.
 ```bash
+export LANGUAGE="fin"
+
 alpaca_eval evaluate_from_model \
-  --model_configs 'tulu-3' \
+  --model_configs 'finnish-llama-8b-dpo' \
+  --output_path "finnish-llama-8b-dpo-$LANGUAGE"
 ```
 
-The model outputs will be saved to `results/tulu-3`.
+The model outputs will be saved to `results/finnish-llama-8b-dpo-fin`.
 
 
 ### Generating judgments for a model
@@ -50,10 +55,13 @@ alpaca_eval evaluate \
 This example asks GPT-4 to compare responses in `results/tulu-3/model_outputs.json` to the reference responses `results/gpt-4-turbo-2024-04-09/model_outputs.json`: 
 ```bash
 alpaca_eval evaluate \
-  --model_outputs 'results/tulu-3/model_outputs.json' \
-  --reference_outputs 'results/gpt-4-turbo-2024-04-09/model_outputs.json'
+  --model_outputs 'results/finnish-llama-8b-dpo-fin/model_outputs.json' \
+  --reference_outputs 'results/finnish-llama-8b-dpo-fin/reference_outputs.json'
 ```
-The results will be saved to `results/tulu-3/weighted_alpaca_eval_gpt4_turbo`.
+The eval results will be saved to `results/finnish-llama-8b-dpo-fin/weighted_alpaca_eval_gpt4_turbo`.
+
+**Note**
+The results has a precomputed leaderboard but they are only for **English** results, we don't have a precomputed leaderboard for Finnish.
 
 # <a href="https://tatsu-lab.github.io/alpaca_eval/" target="_blank"><img src="https://raw.githubusercontent.com/tatsu-lab/alpaca_eval/main/docs/AlpacaFarm_small.png" width="35"></a> [AlpacaEval](https://tatsu-lab.github.io/alpaca_eval/) : An Automatic Evaluator for Instruction-following Language Models
 
