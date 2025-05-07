@@ -11,7 +11,7 @@ pip install -e git+https://github.com/LumiOpen/alpaca_eval
 
 ### Supporting a new model to evaluate
 - Add a directory for the model under  `src/alpaca_eval/models_configs`.
-- If you are evaluating a model from HuggingFace or a local model use `tulu-3` or `tulu-3-local` as an example.
+- If you are evaluating a model from HuggingFace or a local model use `src/alpaca_eval/models_configs/finnish-llama-8b-dpo`  as an example.
 - Set the chat template in `prompt.txt`
 
 ### Generating outputs and judgments for a model
