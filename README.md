@@ -24,7 +24,6 @@ It is important to specify the reference model because by default AlpacaEval 2.0
 ```bash
 alpaca_eval evaluate_from_model \
   --model_configs <MODEL_CONFIG> \
-  --reference_model_configs <REFERENCE CONFIG>
 ```
 
 **Example usage**
@@ -33,7 +32,6 @@ This example generates outputs from `tulu-3` and then compares the model's respo
 ```bash
 alpaca_eval evaluate_from_model \
   --model_configs 'tulu-3' \
-  --reference_model_configs 'gpt-4-turbo-2024-04-09'
 ```
 
 The model outputs will be saved to `results/tulu-3`.
