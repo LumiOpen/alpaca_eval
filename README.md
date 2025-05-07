@@ -17,7 +17,7 @@ pip install -e git+https://github.com/LumiOpen/alpaca_eval
 ### Generating outputs and judgments for a model
 This generates responses for a model and then uses GPT-4 as judge to obtain pairwise preferences between the model responses and reference responses. 
 
-If you don't supply a reference model config, the reference responses will be taken from the alpaca_eval dataset. For Finnish, this is https://huggingface.co/datasets/LumiOpen/alpaca_eval_multi
+If you don't supply a reference model config, the reference responses will be taken from the 'output' column of the alpaca_eval dataset. For Finnish, this is https://huggingface.co/datasets/LumiOpen/alpaca_eval_multi
 
 We specify the language using the LANGUAGE env variable. If no value is provided, we default to English ('regular' AlpacaEval). 
 
