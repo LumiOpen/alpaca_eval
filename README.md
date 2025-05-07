@@ -52,7 +52,7 @@ alpaca_eval evaluate \
 ```
 **Example usage**
 
-This example asks GPT-4 to compare responses in `results/tulu-3/model_outputs.json` to the reference responses `results/gpt-4-turbo-2024-04-09/model_outputs.json`: 
+This example asks GPT-4 to compare responses in `results/finnish-llama-8b-dpo/model_outputs.json` to the reference responses given in the alpaca_eval dataset: 
 ```bash
 alpaca_eval evaluate \
   --model_outputs 'results/finnish-llama-8b-dpo-fin/model_outputs.json' \
@@ -61,7 +61,7 @@ alpaca_eval evaluate \
 The eval results will be saved to `results/finnish-llama-8b-dpo-fin/weighted_alpaca_eval_gpt4_turbo`.
 
 **Note**
-The results has a precomputed leaderboard but they are only for **English** results, we don't have a precomputed leaderboard for Finnish.
+The results summary includes a precomputed leaderboard but they are only for **English**, we don't have a precomputed leaderboard for Finnish.
 
 # <a href="https://tatsu-lab.github.io/alpaca_eval/" target="_blank"><img src="https://raw.githubusercontent.com/tatsu-lab/alpaca_eval/main/docs/AlpacaFarm_small.png" width="35"></a> [AlpacaEval](https://tatsu-lab.github.io/alpaca_eval/) : An Automatic Evaluator for Instruction-following Language Models
 
