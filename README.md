@@ -15,7 +15,7 @@ pip install -e git+https://github.com/LumiOpen/alpaca_eval
 - Set the chat template in `prompt.txt`
 
 ### Generating outputs and judgments for a model
-This generates responses for a model and then uses GPT-4 as judge to obtain pairwise preferences between the model responses and reference responses. 
+This generates responses for a model and then uses GPT-4 as judge to obtain pairwise preferences between the model responses and reference responses. The original AlpacaEval uses `gpt-4-turbo` as the judge but we use `gpt-4o-2024-08-06` because it is cheaper than older GPT-4 models.  
 
 If you don't supply a reference model config, the reference responses will be taken from the 'output' column of the alpaca_eval dataset. For Finnish, this is https://huggingface.co/datasets/LumiOpen/alpaca_eval_multi
 
@@ -30,13 +30,13 @@ alpaca_eval evaluate_from_model \
 
 **Example usage**
 
-This example generates outputs from `finnish-llama-8b-dpo` and then compares the model's responses to reference answers from `gpt-4-turbo-2024-04-09`.
+This example generates outputs from `finnish-llama-8b-dpo` for the Finnish AlpacaEval questions, saves the model responses in `results/finnish-llama-8b-dpo-fin` and evaluates the responses against the reference answers.
 ```bash
 export LANGUAGE="fin"
 
 alpaca_eval evaluate_from_model \
   --model_configs 'finnish-llama-8b-dpo' \
-  --output_path "finnish-llama-8b-dpo-$LANGUAGE"
+  --output_path "results/finnish-llama-8b-dpo-$LANGUAGE"
 ```
 
 The model outputs will be saved to `results/finnish-llama-8b-dpo-fin`.
@@ -61,7 +61,7 @@ alpaca_eval evaluate \
 The eval results will be saved to `results/finnish-llama-8b-dpo-fin/weighted_alpaca_eval_gpt4_turbo`.
 
 **Note**
-The results summary includes a precomputed leaderboard but they are only for **English**, we don't have a precomputed leaderboard for Finnish.
+The precomputed leaderboard are only for English questions and only for gpt-4-turbo as judge. We don't have a precomputed leaderboard using gpt-4o as judge for English and Finnish.
 
 # <a href="https://tatsu-lab.github.io/alpaca_eval/" target="_blank"><img src="https://raw.githubusercontent.com/tatsu-lab/alpaca_eval/main/docs/AlpacaFarm_small.png" width="35"></a> [AlpacaEval](https://tatsu-lab.github.io/alpaca_eval/) : An Automatic Evaluator for Instruction-following Language Models
 
