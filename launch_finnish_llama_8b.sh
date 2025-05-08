@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --job-name=alpaca_8b  # Job name
+#SBATCH --job-name=alpaca_eng_8b  # Job name
 #SBATCH --nodes=1
 #SBATCH --partition=dev-g
 #SBATCH --time=02:00:00
@@ -26,7 +26,6 @@ export LANGUAGE="fin" # supported langs: eng or fin
 
 alpaca_eval evaluate_from_model \
   --model_configs "finnish-llama-8b-dpo" \
+  --annotators_config 'weighted_alpaca_eval_gpt-4o-2024-08-06' \
   --output_path "results/finnish-llama-8b-dpo-$LANGUAGE" \
 
-# alpaca_eval evaluate --model_outputs 'example/outputs.json' \
-#                     --reference_outputs 'results/gpt-4-turbo-2024-04-09/model_outputs.json'
