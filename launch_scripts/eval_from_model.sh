@@ -1,7 +1,7 @@
 #!/bin/bash
-#SBATCH --job-name=alpaca_$model_name  # Job name
+#SBATCH --job-name=alpaca_${model_name}  # Job name
 #SBATCH --nodes=1
-#SBATCH --partition=standard-g
+#SBATCH --partition=dev-g
 #SBATCH --time=01:00:00
 #SBATCH --ntasks-per-node=8
 #SBATCH --cpus-per-task=7
@@ -19,6 +19,8 @@ source /scratch/project_462000353/zosaelai2/.alpaca_venv/bin/activate
 
 export PYTHONPATH="/scratch/project_462000353/zosaelai2"
 export HF_HOME="/scratch/project_462000353/hf_cache"
+export SSL_CERT_FILE=$(python -m certifi)
+
 export LANGUAGE=$lang
 
 echo ""
@@ -27,6 +29,7 @@ echo "Evaluating $model_name for ${lang^^}"
 alpaca_eval evaluate_from_model \
     --model_configs "$model_name" \
     --output_path "results/$model_name-$lang" \
+    --annotators_config 'weighted_alpaca_eval_gpt-4o-2024-08-06' 
 
 
 

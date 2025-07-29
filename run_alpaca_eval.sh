@@ -27,8 +27,8 @@ if [ "$#" -lt 3 ]; then
 fi
 
 # First two arguments
-model_name="$1"
-model_path="$2"
+model_path="$1"
+model_name="$2"
 shift 2  # Remove first two args from the list
 
 # Remaining arguments are language codes
@@ -86,6 +86,6 @@ create_prompt
 
 echo "RUNNING AlpacaEval... "
 for lang in "${lang_codes[@]}"; do
-  job_id=$(sbatch --export=model_name=$model_name,lang=$lang launch_scripts/eval_from_model.sh | awk '{print $4}')
-  echo "Submitted slurm job for lang: ${lang^^}. Job ID: $job_id"
+  job_id=$(sbatch --job-name="alpaca_${lang}" --export=model_name=$model_name,lang=$lang launch_scripts/eval_from_model.sh | awk '{print $4}')
+  echo "Submitted job to evaluate $model_name in $lang | Job ID: $job_id"
 done
