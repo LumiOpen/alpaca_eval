@@ -9,6 +9,21 @@ pip install -e git+https://github.com/LumiOpen/alpaca_eval
 ### Configuring the OpenAI client
 - Add your OpenAI API key and organisation id to `client_configs/openai_configs.yaml`
 
+### Running evaluations (shortcut)
+```
+sh run_alpaca_eval.sh <path_to_model_to_eval> <lang_to_eval1> [<lang_to_eval2>]
+```
+**Examples**
+```
+sh run_alpaca_eval.sh LumiOpen/Poro-34B en fi
+sh run_alpaca_eval.sh meta-llama/Llama-3.1-8B-Instruct en
+```
+
+### Viewing results (shortcut)
+```
+sh show_result.sh meta-llama/Llama-3.1-8B-Instruct en
+```
+
 ### Supporting a new model to evaluate
 - Add a directory for the model under  `src/alpaca_eval/models_configs`.
 - If you are evaluating a model from HuggingFace or a local model use `src/alpaca_eval/models_configs/finnish-llama-8b-dpo`  as an example.
