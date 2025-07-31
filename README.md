@@ -77,8 +77,10 @@ alpaca_eval evaluate \
 ```
 The eval results will be saved to `results/finnish-llama-8b-dpo-fin/weighted_alpaca_eval_gpt4_turbo`.
 
-**Note**
+**Note:**
 The precomputed leaderboard are only for English questions and only for gpt-4-turbo as judge. We don't have a precomputed leaderboard using gpt-4o as judge for English and Finnish.
+
+### End of LUMI Instructions
 
 # <a href="https://tatsu-lab.github.io/alpaca_eval/" target="_blank"><img src="https://raw.githubusercontent.com/tatsu-lab/alpaca_eval/main/docs/AlpacaFarm_small.png" width="35"></a> [AlpacaEval](https://tatsu-lab.github.io/alpaca_eval/) : An Automatic Evaluator for Instruction-following Language Models
 
